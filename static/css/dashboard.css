@@ -1,0 +1,128 @@
+:root {
+    --accent: #c0392b;
+    --dark: #1a1a1a;
+    --sidebar-width: 240px;
+}
+
+body.dashboard-body {
+    font-family: 'Poppins', sans-serif;
+    background: #f4f5f7;
+    margin: 0;
+}
+
+/* ---------------- SIDEBAR ---------------- */
+.dash-sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: var(--sidebar-width);
+    background: var(--dark);
+    color: #ccc;
+    padding: 1.5rem 1rem;
+    overflow-y: auto;
+    z-index: 1000;
+}
+.dash-sidebar__brand {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    display: block;
+    text-decoration: none;
+}
+.dash-sidebar .nav-link {
+    color: #ccc;
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.2rem;
+    font-size: 0.9rem;
+}
+.dash-sidebar .nav-link i { width: 20px; display: inline-block; }
+.dash-sidebar .nav-link:hover,
+.dash-sidebar .nav-link.active {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* ---------------- MAIN CONTENT ---------------- */
+.dash-main {
+    margin-left: var(--sidebar-width);
+    padding: 1.5rem 2rem 3rem;
+}
+.dash-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+/* ---------------- STAT CARDS ---------------- */
+.stat-card {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    height: 100%;
+}
+.stat-card__value {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+.stat-card__label {
+    color: #888;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ---------------- CARDS / TABLES ---------------- */
+.dash-card {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+}
+.dash-table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #888;
+    border-bottom: 2px solid #eee;
+}
+.dash-table td { vertical-align: middle; }
+
+.badge-status {
+    text-transform: capitalize;
+    font-weight: 500;
+    padding: 0.35em 0.8em;
+}
+
+/* ---------------- POS ---------------- */
+.pos-table-btn {
+    display: block;
+    border: 2px solid #eee;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    text-align: center;
+    text-decoration: none;
+    color: var(--dark);
+    transition: all 0.2s ease;
+}
+.pos-table-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+.pos-menu-item {
+    border: 1px solid #eee;
+    border-radius: 0.6rem;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media (max-width: 991px) {
+    .dash-sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+    .dash-sidebar.open { transform: translateX(0); }
+    .dash-main { margin-left: 0; }
+}

@@ -1,0 +1,47 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Offers{% endblock %}
+{% block page_title %}Offer Management{% endblock %}
+
+{% block content %}
+<div class="dash-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">All Offers</h6>
+        <a href="{% url 'dashboard_offer_add' %}" class="btn btn-sm" style="background:var(--accent); color:#fff;">+ Add Offer</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table dash-table">
+            <thead>
+                <tr><th>Title</th><th>Discount</th><th>Start</th><th>End</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for offer in offers %}
+                <tr>
+                    <td>{{ offer.title }}</td>
+                    <td>{{ offer.discount_percent }}%</td>
+                    <td>{{ offer.start_date }}</td>
+                    <td>{{ offer.end_date }}</td>
+                    <td>
+                        {% if offer.is_currently_active %}
+                            <span class="badge bg-success badge-status">Live</span>
+                        {% elif offer.is_active %}
+                            <span class="badge bg-warning text-dark badge-status">Scheduled/Expired</span>
+                        {% else %}
+                            <span class="badge bg-secondary badge-status">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{% url 'dashboard_offer_edit' offer.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        <form method="post" action="{% url 'dashboard_offer_delete' offer.id %}" class="d-inline" onsubmit="return confirm('Delete this offer?');">
+                            {% csrf_token %}
+                            <button class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-muted">No offers yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

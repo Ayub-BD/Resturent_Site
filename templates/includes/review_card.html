@@ -1,0 +1,23 @@
+{% comment %}
+Usage: {% include "includes/review_card.html" with review=review %}
+{% endcomment %}
+<div class="swiper-slide">
+    <div class="review-card">
+        <div class="review-card__stars">
+            {% for i in "12345" %}
+                <i class="bi {% if forloop.counter <= review.rating %}bi-star-fill{% else %}bi-star{% endif %}"></i>
+            {% endfor %}
+        </div>
+        <p class="review-card__comment">&ldquo;{{ review.comment }}&rdquo;</p>
+        <div class="review-card__author d-flex align-items-center gap-2">
+            {% if review.photo %}
+                <img src="{{ review.photo.url }}" alt="{{ review.customer_name }}" class="review-card__avatar">
+            {% else %}
+                <div class="review-card__avatar review-card__avatar--placeholder">
+                    {{ review.customer_name|first|upper }}
+                </div>
+            {% endif %}
+            <span class="review-card__name">{{ review.customer_name }}</span>
+        </div>
+    </div>
+</div>

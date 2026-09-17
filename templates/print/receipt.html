@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Receipt {{ order.order_number }}</title>
+    <style>
+        body { font-family: 'Courier New', monospace; max-width: 380px; margin: 0 auto; padding: 20px; color: #000; }
+        h2, h4 { text-align: center; margin: 4px 0; }
+        .center { text-align: center; }
+        hr { border: none; border-top: 1px dashed #000; margin: 10px 0; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        td { padding: 2px 0; }
+        .right { text-align: right; }
+        .totals td { font-weight: bold; }
+        @media print {
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <h2>{{ profile.name|default:"Our Restaurant" }}</h2>
+    <p class="center">{{ profile.address }}</p>
+    <p class="center">{{ profile.phone }}</p>
+    <hr>
+    <p>Order: {{ order.order_number }}<br>
+       {% if order.table %}Table: {{ order.table.table_number }}<br>{% else %}
+       Delivery to: {{ order.delivery_address }}<br>
+       Customer: {{ order.customer_name }} ({{ order.customer_phone }})<br>
+       {% endif %}
+       Date: {{ order.created_at|date:"M d, Y H:i" }}</p>
+    <hr>
+    <table>
+        {% for line in order.items.all %}
+        <tr>
+            <td>{{ line.menu_item.name }} x{{ line.quantity }}</td>
+            <td class="right">${{ line.line_total }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <hr>
+    <table class="totals">
+        <tr><td>Subtotal</td><td class="right">${{ order.subtotal }}</td></tr>
+        <tr><td>Discount</td><td class="right">${{ order.discount }}</td></tr>
+        <tr><td>Total</td><td class="right">${{ order.total }}</td></tr>
+        <tr><td>Payment</td><td class="right">{{ order.get_payment_method_display }}</td></tr>
+    </table>
+    <hr>
+    <p class="center">Thank you for dining with us!</p>
+
+    <div class="no-print center" style="margin-top: 20px;">
+        <button onclick="window.print()">Print</button>
+    </div>
+</body>
+</html>

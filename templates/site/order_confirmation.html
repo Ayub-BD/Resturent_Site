@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Order Confirmed - {{ profile.name }}{% endblock %}
+
+{% block content %}
+<section class="section text-center">
+    <div class="container" data-aos="fade-up" style="max-width: 560px;">
+        <i class="bi bi-check-circle-fill" style="font-size: 3.5rem; color: var(--accent);"></i>
+        <h1 class="section-title mt-3">Thank you, {{ order.customer_name }}!</h1>
+        <p class="text-muted">Your order has been received and is being prepared.</p>
+
+        <div class="p-4 text-start mt-4" style="background:#fff; border-radius:1rem; box-shadow:0 6px 24px rgba(0,0,0,0.06);">
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Order Number</span>
+                <strong>{{ order.order_number }}</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Delivering to</span>
+                <span class="text-end">{{ order.delivery_address }}</span>
+            </div>
+            <hr>
+            <table class="table table-sm mb-2">
+                {% for line in order.items.all %}
+                <tr>
+                    <td>{{ line.menu_item.name }} x{{ line.quantity }}</td>
+                    <td class="text-end">${{ line.line_total }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <hr>
+            <div class="d-flex justify-content-between fw-bold fs-5">
+                <span>Total</span><span>${{ order.total }}</span>
+            </div>
+        </div>
+
+        <a href="{% url 'home' %}" class="btn btn-accent mt-4">Back to Home</a>
+    </div>
+</section>
+{% endblock %}

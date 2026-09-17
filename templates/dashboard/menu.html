@@ -1,0 +1,96 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Menu Management{% endblock %}
+{% block page_title %}Menu Management{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="dash-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0">Menu Items</h6>
+                <a href="{% url 'dashboard_menu_item_add' %}" class="btn btn-sm" style="background:var(--accent); color:#fff;">+ Add Item</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table dash-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th><th>Category</th><th>Price</th><th>Available</th><th>Featured</th><th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.category.name }}</td>
+                            <td>
+                                ${{ item.price }}
+                                {% if item.old_price %}<span class="text-muted text-decoration-line-through small ms-1">${{ item.old_price }}</span>{% endif %}
+                            </td>
+                            <td>
+                                {% if item.is_available %}<span class="badge bg-success badge-status">Available</span>
+                                {% else %}<span class="badge bg-secondary badge-status">Unavailable</span>{% endif %}
+                            </td>
+                            <td>{% if item.is_featured %}<i class="bi bi-star-fill text-warning"></i>{% endif %}</td>
+                            <td class="text-end">
+                                <a href="{% url 'dashboard_menu_item_edit' item.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                <form method="post" action="{% url 'dashboard_menu_item_delete' item.id %}" class="d-inline" onsubmit="return confirm('Delete this item?');">
+                                    {% csrf_token %}
+                                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="6" class="text-center text-muted">No menu items yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="dash-card">
+            <h6 class="mb-3">Categories</h6>
+            <ul class="list-group mb-3">
+                {% for category in categories %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>{{ category.name }} <span class="text-muted small">(#{{ category.display_order }})</span></span>
+                            {% if category.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}
+                        </div>
+                        <div class="d-flex gap-1 mt-2">
+                            <form method="post" action="{% url 'dashboard_menu_category_toggle' category.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-outline-secondary">
+                                    {% if category.is_active %}Deactivate{% else %}Activate{% endif %}
+                                </button>
+                            </form>
+                            <form method="post" action="{% url 'dashboard_menu_category_delete' category.id %}" class="d-inline" onsubmit="return confirm('Delete this category?');">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No categories yet.</li>
+                {% endfor %}
+            </ul>
+
+            <form method="post">
+                {% csrf_token %}
+                <label class="form-label small">Category name</label>
+                {{ category_form.name }}
+                <label class="form-label small mt-2">Display order</label>
+                {{ category_form.display_order }}
+                <div class="form-check mt-2">
+                    {{ category_form.is_active }}
+                    <label class="form-check-label small" for="{{ category_form.is_active.id_for_label }}">
+                        Show on website (active)
+                    </label>
+                </div>
+                <button type="submit" name="add_category" class="btn btn-sm w-100 mt-2" style="background:var(--accent); color:#fff;">Add Category</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

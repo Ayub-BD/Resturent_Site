@@ -1,0 +1,30 @@
+{% load static %}
+{% comment %}
+Usage: {% include "includes/menu_card.html" with item=item %}
+{% endcomment %}
+<div class="menu-card" data-aos="fade-up">
+    <div class="menu-card__image">
+        {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.name }}">
+        {% else %}
+            <img src="{% static 'img/placeholders/food.jpg' %}" alt="{{ item.name }}">
+        {% endif %}
+        {% if item.discount_percent %}
+            <span class="menu-card__badge">{{ item.discount_percent }}% OFF</span>
+        {% endif %}
+        {% if not item.is_available %}
+            <span class="menu-card__badge menu-card__badge--muted">Unavailable</span>
+        {% endif %}
+    </div>
+    <div class="menu-card__body">
+        <div class="d-flex justify-content-between align-items-start">
+            <h6 class="menu-card__name">{{ item.name }}</h6>
+            <div class="menu-card__price text-end">
+                <span class="current">${{ item.price }}</span>
+                {% if item.old_price %}<span class="old">${{ item.old_price }}</span>{% endif %}
+            </div>
+        </div>
+        <p class="menu-card__desc">{{ item.description }}</p>
+        <span class="menu-card__category">{{ item.category.name }}</span>
+    </div>
+</div>

@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- ============ HERO ============ -->
+<section class="hero d-flex align-items-center" style="background-image: url({% static 'img/hero.jfif' %});">
+    <div class="hero__overlay"></div>
+    <div class="container position-relative text-center text-lg-start">
+        <div class="row">
+            <div class="col-lg-7" data-aos="fade-up">
+                <h1 class="hero__title">{{ profile.name|default:"Our Restaurant" }}</h1>
+                <p class="hero__tagline">{{ profile.tagline|default:"Fine food, warmly served." }}</p>
+                <p class="hero__desc">{{ profile.about_text|truncatewords:30 }}</p>
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start mt-4">
+                    <a href="{% url 'menu' %}" class="btn btn-accent btn-lg">View Menu</a>
+                    <a href="{% url 'reserve' %}" class="btn btn-outline-light btn-lg">Reserve a Table</a>
+                    <a href="{{ profile.foodpanda_url|default:'#' }}" target="_blank" rel="noopener" class="btn btn-light btn-lg">Order Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about" class="section about-section">
+    <div class="container">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-6" data-aos="fade-right">
+                <img src="{% static 'img/hero.jfif' %}" alt="{{ profile.name }}" class="img-fluid about-section__image">
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <span class="section-eyebrow">About Us</span>
+                <h2 class="section-title">A Story Told Through Food</h2>
+                <p class="text-muted">{{ profile.about_text }}</p>
+
+                <div class="row text-center mt-4 counters">
+                    <div class="col-3">
+                        <span class="counter" data-target="{{ years_experience|default:12 }}">0</span>
+                        <p class="small text-muted mb-0">Years</p>
+                    </div>
+                    <div class="col-3">
+                        <span class="counter" data-target="{{ dish_count|default:80 }}">0</span>
+                        <p class="small text-muted mb-0">Dishes</p>
+                    </div>
+                    <div class="col-3">
+                        <span class="counter" data-target="{{ happy_customers|default:5000 }}">0</span>
+                        <p class="small text-muted mb-0">Happy Guests</p>
+                    </div>
+                    <div class="col-3">
+                        <span class="counter" data-target="{{ chefs|length|default:6 }}">0</span>
+                        <p class="small text-muted mb-0">Chefs</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ FEATURED MENU ============ -->
+<section id="featured-menu" class="section section--muted">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="section-eyebrow">From the Kitchen</span>
+            <h2 class="section-title">Featured Dishes</h2>
+        </div>
+        <div class="row g-4">
+            {% for item in featured_items %}
+                <div class="col-md-6 col-lg-4">
+                    {% include "includes/menu_card.html" with item=item %}
+                </div>
+            {% empty %}
+                <p class="text-center text-muted">Featured dishes will appear here once added from the dashboard.</p>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-5">
+            <a href="{% url 'menu' %}" class="btn btn-outline-accent">View Full Menu</a>
+        </div>
+    </div>
+</section>
+
+<!-- ============ OUR STORY TEASER ============ -->
+<section id="our-story" class="section our-story-teaser">
+    <div class="container text-center" data-aos="fade-up">
+        <span class="section-eyebrow">Our Journey</span>
+        <h2 class="section-title">{{ history.title|default:"Our Story" }}</h2>
+        <p class="text-muted mx-auto" style="max-width: 640px;">{{ history.content|truncatewords:35 }}</p>
+        <a href="{% url 'our_story' %}" class="btn btn-outline-accent mt-3">Read Our Full Story</a>
+    </div>
+</section>
+
+<!-- ============ OUR CHEFS ============ -->
+<section id="chefs" class="section section--muted chefs-section">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="section-eyebrow">Meet the Team</span>
+            <h2 class="section-title">Our Chefs</h2>
+            <p class="text-muted">Behind every great dish is a great chef.</p>
+        </div>
+        <div class="row g-4">
+            {% for chef in chefs %}
+                <div class="col-6 col-lg-3">
+                    {% include "includes/chef_card.html" with chef=chef %}
+                </div>
+            {% empty %}
+                <p class="text-center text-muted">Chef profiles will appear here once added from the dashboard.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ============ OFFERS ============ -->
+{% if active_offers %}
+<section id="offers" class="section offers-section">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="section-eyebrow">Limited Time</span>
+            <h2 class="section-title">Special Offers</h2>
+        </div>
+        <div class="row g-4">
+            {% for offer in active_offers %}
+                <div class="col-md-6 col-lg-4" data-aos="fade-up">
+                    <div class="offer-card">
+                        {% if offer.image %}<img src="{{ offer.image.url }}" alt="{{ offer.title }}">{% endif %}
+                        <div class="offer-card__badge">{{ offer.discount_percent }}% OFF</div>
+                        <div class="offer-card__body">
+                            <h5>{{ offer.title }}</h5>
+                            <p class="text-muted small">{{ offer.description }}</p>
+                            <p class="small text-muted mb-0">Valid until {{ offer.end_date }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- ============ REVIEWS ============ -->
+<section id="reviews" class="section section--muted reviews-section">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="section-eyebrow">Testimonials</span>
+            <h2 class="section-title">What Our Guests Say</h2>
+        </div>
+        <div class="swiper reviewsSwiper" data-aos="fade-up">
+            <div class="swiper-wrapper">
+                {% for review in approved_reviews %}
+                    {% include "includes/review_card.html" with review=review %}
+                {% empty %}
+                    <div class="swiper-slide">
+                        <p class="text-center text-muted">No reviews yet — be the first to share yours.</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="swiper-pagination mt-4"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ RESERVATION CTA ============ -->
+<section id="reservation" class="section reservation-cta">
+    <div class="container text-center" data-aos="fade-up">
+        <h2 class="section-title text-white">Reserve Your Table Today</h2>
+        <p class="text-white-50 mx-auto" style="max-width: 560px;">
+            Join us for an unforgettable dining experience. Book ahead to guarantee your spot.
+        </p>
+        <a href="{% url 'reserve' %}" class="btn btn-light btn-lg mt-3">Book a Table</a>
+    </div>
+</section>
+
+{% endblock %}

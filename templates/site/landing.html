@@ -1,0 +1,239 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile.name|default:"Our Restaurant" }}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+
+    <style>
+        :root { --accent: {{ profile.primary_color|default:"#c0392b" }}; }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: #120c0b;
+        }
+
+        /* Full-bleed hero background photo */
+        .landing-bg {
+            position: fixed;
+            inset: 0;
+            background: url("{% static 'img/hero-bg.jpg' %}") center/cover no-repeat;
+            transform: scale(1.08);
+            animation: slowZoom 22s ease-in-out infinite alternate;
+            filter: brightness(0.55) saturate(1.05);
+        }
+        @keyframes slowZoom {
+            0%   { transform: scale(1.0); }
+            100% { transform: scale(1.12); }
+        }
+
+        /* Warm gradient wash + soft vignette on top of the photo */
+        .landing-overlay {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at top left, rgba(192,57,43,0.28), transparent 55%),
+                radial-gradient(ellipse at bottom right, rgba(0,0,0,0.55), transparent 60%),
+                linear-gradient(160deg, rgba(10,8,8,0.75) 0%, rgba(10,8,8,0.45) 45%, rgba(10,8,8,0.85) 100%);
+        }
+
+        /* Gently drifting embers/particles for a touch of life */
+        .landing-particles span {
+            position: fixed;
+            bottom: -10px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255, 187, 138, 0.65);
+            box-shadow: 0 0 8px 2px rgba(255, 140, 66, 0.55);
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0%   { transform: translateY(0) translateX(0); opacity: 0; }
+            10%  { opacity: 1; }
+            100% { transform: translateY(-110vh) translateX(20px); opacity: 0; }
+        }
+
+        .landing-wrap {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 620px;
+            padding: 1.5rem;
+            animation: fadeInUp 0.9s ease both;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .landing-card {
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(6px);
+            border-radius: 1.75rem;
+            padding: 3.25rem 2.75rem;
+            text-align: center;
+            box-shadow: 0 40px 90px rgba(0,0,0,0.45), 0 2px 0 rgba(255,255,255,0.6) inset;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .landing-logo {
+            height: 60px;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 6px 14px rgba(0,0,0,0.15));
+        }
+
+        .landing-eyebrow {
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.6rem;
+        }
+
+        .landing-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 800;
+            font-size: 2.4rem;
+            line-height: 1.15;
+            margin-bottom: 0.4rem;
+            background: linear-gradient(120deg, #1a1a1a, var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .landing-sub {
+            color: #7a7a7a;
+            margin-bottom: 2.2rem;
+            font-size: 0.98rem;
+        }
+
+        .landing-choice {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-align: left;
+            border: 1.5px solid #eee;
+            border-radius: 1.1rem;
+            padding: 1.1rem 1.35rem;
+            margin-bottom: 1rem;
+            text-decoration: none;
+            color: var(--dark, #1a1a1a);
+            transition: all 0.25s ease;
+            overflow: hidden;
+        }
+        .landing-choice::after {
+            content: "\f285";
+            font-family: "bootstrap-icons";
+            margin-left: auto;
+            color: #ccc;
+            transition: transform 0.25s ease, color 0.25s ease;
+        }
+        .landing-choice:hover {
+            border-color: var(--accent);
+            background: #fff6f4;
+            transform: translateY(-3px);
+            box-shadow: 0 14px 28px rgba(192,57,43,0.14);
+        }
+        .landing-choice:hover::after {
+            transform: translateX(4px);
+            color: var(--accent);
+        }
+        .landing-choice .icon-badge {
+            flex: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: var(--accent);
+            background: rgba(192,57,43,0.1);
+        }
+        .landing-choice strong {
+            display: block;
+            font-size: 1.05rem;
+        }
+        .landing-choice span.desc {
+            font-size: 0.83rem;
+            color: #888;
+        }
+
+        .landing-foot {
+            margin-top: 1.75rem;
+            font-size: 0.78rem;
+            color: #aaa;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-bg"></div>
+    <div class="landing-overlay"></div>
+    <div class="landing-particles">
+        <span style="left:8%;  animation-duration:9s;  animation-delay:0s;"></span>
+        <span style="left:22%; animation-duration:12s; animation-delay:2s;"></span>
+        <span style="left:38%; animation-duration:10s; animation-delay:4s;"></span>
+        <span style="left:55%; animation-duration:14s; animation-delay:1s;"></span>
+        <span style="left:70%; animation-duration:11s; animation-delay:3s;"></span>
+        <span style="left:85%; animation-duration:13s; animation-delay:5s;"></span>
+        <span style="left:95%; animation-duration:9s;  animation-delay:2.5s;"></span>
+    </div>
+
+    <div class="landing-wrap">
+        <div class="landing-card">
+            {% if profile.logo %}
+                <img src="{{ profile.logo.url }}" alt="{{ profile.name }}" class="landing-logo">
+            {% endif %}
+            <span class="landing-eyebrow">Welcome to</span>
+            <h1 class="landing-title">{{ profile.name|default:"Our Restaurant" }}</h1>
+            <p class="landing-sub">{{ profile.tagline|default:"Fine food, warm hospitality, unforgettable moments." }}</p>
+
+            <a href="{% url 'home' %}" class="landing-choice">
+                <span class="icon-badge"><i class="bi bi-person"></i></span>
+                <span>
+                    <strong>Continue as Customer</strong>
+                    <span class="desc">Browse the menu, offers, and reserve a table</span>
+                </span>
+            </a>
+
+            <a href="{% url 'dashboard_login' %}" class="landing-choice">
+                <span class="icon-badge"><i class="bi bi-shield-lock"></i></span>
+                <span>
+                    <strong>Login as Manager / Admin</strong>
+                    <span class="desc">Access the restaurant management dashboard</span>
+                </span>
+            </a>
+
+            {% if profile.opening_hours %}
+                <p class="landing-foot"><i class="bi bi-clock"></i> {{ profile.opening_hours|linebreaksbr }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

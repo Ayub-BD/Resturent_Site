@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kitchen Ticket {{ order.order_number }}</title>
+    <style>
+        body { font-family: 'Courier New', monospace; max-width: 340px; margin: 0 auto; padding: 20px; color: #000; }
+        h2 { text-align: center; margin: 4px 0; }
+        hr { border: none; border-top: 2px dashed #000; margin: 10px 0; }
+        .item { font-size: 1.1rem; font-weight: bold; margin: 6px 0; }
+        .notes { font-size: 0.9rem; margin-left: 10px; color: #333; }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body>
+    <h2>KITCHEN ORDER</h2>
+    <hr>
+    <p>Order: <strong>{{ order.order_number }}</strong><br>
+       {% if order.table %}Table: <strong>{{ order.table.table_number }}</strong><br>{% else %}<strong>DELIVERY</strong> - {{ order.customer_name }}<br>{% endif %}
+       Time: {{ order.created_at|date:"H:i" }}</p>
+    <hr>
+    {% for line in order.items.all %}
+        <div class="item">{{ line.menu_item.name }} x{{ line.quantity }}</div>
+        {% if line.notes %}<div class="notes">Note: {{ line.notes }}</div>{% endif %}
+    {% endfor %}
+    {% if order.special_instructions %}
+        <hr>
+        <p><strong>Special Request:</strong><br>{{ order.special_instructions }}</p>
+    {% endif %}
+    <hr>
+
+    <div class="no-print" style="text-align:center; margin-top: 20px;">
+        <button onclick="window.print()">Print</button>
+    </div>
+</body>
+</html>

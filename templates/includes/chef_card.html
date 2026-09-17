@@ -1,0 +1,29 @@
+{% load static %}
+{% comment %}
+Usage: {% include "includes/chef_card.html" with chef=chef %}
+{% endcomment %}
+<div class="chef-card" data-aos="fade-up">
+    <div class="chef-card__image">
+        {% if chef.image %}
+            <img src="{{ chef.image.url }}" alt="{{ chef.name }}">
+        {% else %}
+            <img src="{% static 'img/placeholders/chef.jpg' %}" alt="{{ chef.name }}">
+        {% endif %}
+        <div class="chef-card__overlay"></div>
+        {% if chef.facebook_url or chef.instagram_url or chef.linkedin_url %}
+            <div class="chef-card__socials">
+                {% if chef.facebook_url %}<a href="{{ chef.facebook_url }}" target="_blank" rel="noopener"><i class="bi bi-facebook"></i></a>{% endif %}
+                {% if chef.instagram_url %}<a href="{{ chef.instagram_url }}" target="_blank" rel="noopener"><i class="bi bi-instagram"></i></a>{% endif %}
+                {% if chef.linkedin_url %}<a href="{{ chef.linkedin_url }}" target="_blank" rel="noopener"><i class="bi bi-linkedin"></i></a>{% endif %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="chef-card__body">
+        <h5 class="chef-card__name">
+            <a href="{% url 'chef_detail' chef.id %}">{{ chef.name }}</a>
+        </h5>
+        <p class="chef-card__designation">{{ chef.designation }}</p>
+        <p class="chef-card__specialty">{{ chef.specialty }}</p>
+        <span class="chef-card__experience">{{ chef.experience_years }}+ Years Experience</span>
+    </div>
+</div>

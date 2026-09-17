@@ -1,0 +1,72 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Table Management{% endblock %}
+{% block page_title %}Table Management{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="dash-card">
+            <h6 class="mb-3">Tables</h6>
+            <div class="table-responsive">
+                <table class="table dash-table align-middle">
+                    <thead>
+                        <tr><th>Table</th><th>Capacity</th><th>Status</th><th>Set Status</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        {% for table in tables %}
+                        <tr>
+                            <td class="fw-bold">{{ table.table_number }}</td>
+                            <td>{{ table.capacity }}</td>
+                            <td>
+                                <span class="badge badge-status
+                                    {% if table.status == 'available' %}bg-success
+                                    {% elif table.status == 'occupied' %}bg-danger
+                                    {% elif table.status == 'reserved' %}bg-warning text-dark
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ table.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <form method="post" action="{% url 'dashboard_table_set_status' table.id %}" class="d-flex gap-1">
+                                    {% csrf_token %}
+                                    <select name="status" class="form-select form-select-sm" style="width:auto;">
+                                        {% for value, label in table.STATUS_CHOICES %}
+                                            <option value="{{ value }}" {% if table.status == value %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary">Set</button>
+                                </form>
+                            </td>
+                            <td class="text-end">
+                                <form method="post" action="{% url 'dashboard_table_delete' table.id %}" class="d-inline" onsubmit="return confirm('Delete this table?');">
+                                    {% csrf_token %}
+                                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="text-center text-muted">No tables yet -- add one to get started.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="dash-card">
+            <h6 class="mb-3">Add Table</h6>
+            <form method="post">
+                {% csrf_token %}
+                <label class="form-label small">Table number</label>
+                {{ table_form.table_number }}
+                <label class="form-label small mt-2">Capacity</label>
+                {{ table_form.capacity }}
+                <label class="form-label small mt-2">Status</label>
+                {{ table_form.status }}
+                <button type="submit" name="add_table" class="btn btn-sm w-100 mt-3" style="background:var(--accent); color:#fff;">Add Table</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

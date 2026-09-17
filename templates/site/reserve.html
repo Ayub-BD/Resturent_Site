@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Reserve a Table - {{ profile.name }}{% endblock %}
+
+{% block content %}
+<section class="page-header text-center">
+    <div class="container" data-aos="fade-up">
+        <span class="section-eyebrow">Book Ahead</span>
+        <h1 class="section-title">Reserve a Table</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7" data-aos="fade-up">
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post" class="contact-form" novalidate>
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Name</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone</label>
+                            {{ form.phone }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Number of Guests</label>
+                            {{ form.guests }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Date</label>
+                            {{ form.date }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Time</label>
+                            {{ form.time }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Special Request</label>
+                            {{ form.special_request }}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-accent btn-lg mt-4 w-100">Confirm Reservation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

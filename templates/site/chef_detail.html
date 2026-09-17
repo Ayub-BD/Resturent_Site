@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ chef.name }} - {{ profile.name }}{% endblock %}
+
+{% block content %}
+<section class="section chef-profile">
+    <div class="container">
+        <div class="row gy-5 align-items-start">
+            <div class="col-lg-5" data-aos="fade-right">
+                {% if chef.image %}
+                    <img src="{{ chef.image.url }}" alt="{{ chef.name }}" class="img-fluid rounded-4 chef-profile__image">
+                {% else %}
+                    <img src="{% static 'img/placeholders/chef.jpg' %}" alt="{{ chef.name }}" class="img-fluid rounded-4 chef-profile__image">
+                {% endif %}
+            </div>
+            <div class="col-lg-7" data-aos="fade-left">
+                <span class="section-eyebrow">Our Chef</span>
+                <h1 class="section-title mb-1">{{ chef.name }}</h1>
+                <p class="chef-profile__designation">{{ chef.designation }}</p>
+                <p class="chef-profile__specialty">{{ chef.specialty }}</p>
+                <span class="chef-card__experience">{{ chef.experience_years }}+ Years Experience</span>
+
+                <p class="text-muted mt-4">{{ chef.bio }}</p>
+
+                {% if signature_dishes %}
+                    <h6 class="mt-4">Signature Dishes</h6>
+                    <ul class="signature-dishes">
+                        {% for dish in signature_dishes %}
+                            <li>{{ dish.name }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div class="d-flex gap-3 mt-4">
+                    {% if chef.facebook_url %}<a href="{{ chef.facebook_url }}" target="_blank" rel="noopener"><i class="bi bi-facebook"></i></a>{% endif %}
+                    {% if chef.instagram_url %}<a href="{{ chef.instagram_url }}" target="_blank" rel="noopener"><i class="bi bi-instagram"></i></a>{% endif %}
+                    {% if chef.linkedin_url %}<a href="{{ chef.linkedin_url }}" target="_blank" rel="noopener"><i class="bi bi-linkedin"></i></a>{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

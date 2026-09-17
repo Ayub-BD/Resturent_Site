@@ -1,0 +1,54 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Reviews{% endblock %}
+{% block page_title %}Review Management{% endblock %}
+
+{% block content %}
+<div class="dash-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">All Reviews</h6>
+        <a href="{% url 'dashboard_review_add' %}" class="btn btn-sm" style="background:var(--accent); color:#fff;">+ Add Review</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table dash-table">
+            <thead>
+                <tr><th>Customer</th><th>Rating</th><th>Comment</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for review in reviews %}
+                <tr>
+                    <td>{{ review.customer_name }}</td>
+                    <td>{{ review.rating }}/5</td>
+                    <td style="max-width: 300px;">{{ review.comment|truncatewords:15 }}</td>
+                    <td>
+                        {% if review.is_approved %}
+                            <span class="badge bg-success badge-status">Approved</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark badge-status">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        {% if not review.is_approved %}
+                            <form method="post" action="{% url 'dashboard_review_approve' review.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-outline-success">Approve</button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{% url 'dashboard_review_reject' review.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-outline-warning">Unapprove</button>
+                            </form>
+                        {% endif %}
+                        <form method="post" action="{% url 'dashboard_review_delete' review.id %}" class="d-inline" onsubmit="return confirm('Delete this review?');">
+                            {% csrf_token %}
+                            <button class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center text-muted">No reviews yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

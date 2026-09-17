@@ -1,0 +1,66 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Overview{% endblock %}
+
+{% block content %}
+<div class="row g-3">
+    <div class="col-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-card__value">{{ todays_orders_count }}</div>
+            <div class="stat-card__label">Today's Orders</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-card__value">${{ todays_revenue }}</div>
+            <div class="stat-card__label">Today's Revenue</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-card__value">{{ pending_orders_count }}</div>
+            <div class="stat-card__label">Pending Orders</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-card__value">{{ available_tables_count }}</div>
+            <div class="stat-card__label">Available Tables</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-card__value">{{ todays_reservations_count }}</div>
+            <div class="stat-card__label">Today's Reservations</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-card__value">{{ total_customers }}</div>
+            <div class="stat-card__label">Total Customers</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-card__value">{{ active_offers_count }}</div>
+            <div class="stat-card__label">Active Offers</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-card__value">{{ pending_reviews_count }}</div>
+            <div class="stat-card__label">Pending Reviews</div>
+        </div>
+    </div>
+</div>
+
+<div class="dash-card mt-4">
+    <h6 class="mb-3">Quick Actions</h6>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'dashboard_pos_start' %}" class="btn btn-sm" style="background:var(--accent); color:#fff;">+ Create Order</a>
+        <a href="{% url 'dashboard_menu_item_add' %}" class="btn btn-sm btn-outline-secondary">+ Add Menu Item</a>
+        <a href="{% url 'dashboard_offer_add' %}" class="btn btn-sm btn-outline-secondary">+ Add Offer</a>
+        <a href="{% url 'dashboard_review_add' %}" class="btn btn-sm btn-outline-secondary">+ Add Review</a>
+    </div>
+</div>
+{% endblock %}

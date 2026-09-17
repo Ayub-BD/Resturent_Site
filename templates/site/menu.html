@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Menu - {{ profile.name }}{% endblock %}
+
+{% block content %}
+<section class="page-header text-center">
+    <div class="container" data-aos="fade-up">
+        <span class="section-eyebrow">Explore</span>
+        <h1 class="section-title">Our Menu</h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+
+        <!-- Category filter -->
+        <div class="d-flex flex-wrap justify-content-center gap-2 mb-5" id="menuFilters" data-aos="fade-up">
+            <button class="btn btn-outline-accent btn-sm menu-filter-btn active" data-category="all">All</button>
+            {% for category in categories %}
+                <button class="btn btn-outline-accent btn-sm menu-filter-btn" data-category="{{ category.slug }}">
+                    {{ category.name }}
+                </button>
+            {% endfor %}
+        </div>
+
+        <div class="row g-4" id="menuGrid">
+            {% for item in items %}
+                <div class="col-md-6 col-lg-4 menu-grid-item" data-category="{{ item.category.slug }}">
+                    {% include "includes/menu_card.html" with item=item %}
+                </div>
+            {% empty %}
+                <p class="text-center text-muted">No menu items yet -- check back soon.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Simple client-side category filter -- no page reload, per spec.
+    document.addEventListener("DOMContentLoaded", function () {
+        const buttons = document.querySelectorAll(".menu-filter-btn");
+        const items = document.querySelectorAll(".menu-grid-item");
+
+        buttons.forEach((btn) => {
+            btn.addEventListener("click", function () {
+                buttons.forEach((b) => b.classList.remove("active"));
+                this.classList.add("active");
+
+                const category = this.dataset.category;
+                items.forEach((item) => {
+                    const show = category === "all" || item.dataset.category === category;
+                    item.style.display = show ? "" : "none";
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

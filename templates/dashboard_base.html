@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %} - {{ profile.name }}</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <style>:root { --accent: {{ profile.primary_color|default:"#c0392b" }}; }</style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="dashboard-body">
+
+    <aside class="dash-sidebar" id="dashSidebar">
+        <a href="{% url 'dashboard_home' %}" class="dash-sidebar__brand">
+            {{ profile.name|default:"Dashboard" }}
+        </a>
+        <nav class="nav flex-column">
+            <a class="nav-link {% if active == 'home' %}active{% endif %}" href="{% url 'dashboard_home' %}">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+            <a class="nav-link {% if active == 'orders' %}active{% endif %}" href="{% url 'dashboard_orders' %}">
+                <i class="bi bi-receipt"></i> Orders
+            </a>
+            <a class="nav-link {% if active == 'pos' %}active{% endif %}" href="{% url 'dashboard_pos_start' %}">
+                <i class="bi bi-plus-circle"></i> Create Order
+            </a>
+            <a class="nav-link {% if active == 'tables' %}active{% endif %}" href="{% url 'dashboard_tables' %}">
+                <i class="bi bi-grid-3x3-gap"></i> Table Management
+            </a>
+            <a class="nav-link {% if active == 'reservations' %}active{% endif %}" href="{% url 'dashboard_reservations' %}">
+                <i class="bi bi-calendar-check"></i> Reservations
+            </a>
+            <a class="nav-link {% if active == 'menu' %}active{% endif %}" href="{% url 'dashboard_menu' %}">
+                <i class="bi bi-egg-fried"></i> Menu
+            </a>
+            <a class="nav-link {% if active == 'offers' %}active{% endif %}" href="{% url 'dashboard_offers' %}">
+                <i class="bi bi-percent"></i> Offers
+            </a>
+            <a class="nav-link {% if active == 'reviews' %}active{% endif %}" href="{% url 'dashboard_reviews' %}">
+                <i class="bi bi-star"></i> Reviews
+            </a>
+            <hr class="text-secondary">
+            <a class="nav-link" href="{% url 'home' %}">
+                <i class="bi bi-box-arrow-up-right"></i> View Website
+            </a>
+            <a class="nav-link" href="{% url 'dashboard_logout' %}">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+        </nav>
+    </aside>
+
+    <main class="dash-main">
+        <div class="dash-topbar">
+            <button class="btn btn-outline-secondary d-lg-none" onclick="document.getElementById('dashSidebar').classList.toggle('open')">
+                <i class="bi bi-list"></i>
+            </button>
+            <h4 class="mb-0">{% block page_title %}Dashboard{% endblock %}</h4>
+            <span class="text-muted small">{{ request.user.get_full_name|default:request.user.username }}</span>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

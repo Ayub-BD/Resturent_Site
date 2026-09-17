@@ -1,0 +1,52 @@
+{% extends "dashboard_base.html" %}
+{% block title %}{{ mode }} Menu Item{% endblock %}
+{% block page_title %}{{ mode }} Menu Item{% endblock %}
+
+{% block content %}
+<div class="dash-card" style="max-width: 640px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Category</label>
+            {{ form.category }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            {{ form.name }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            {{ form.description }}
+        </div>
+        <div class="row">
+            <div class="col-6 mb-3">
+                <label class="form-label">Price</label>
+                {{ form.price }}
+            </div>
+            <div class="col-6 mb-3">
+                <label class="form-label">Old Price (optional)</label>
+                {{ form.old_price }}
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Image</label>
+            {{ form.image }}
+            {% if form.instance.image %}
+                <img src="{{ form.instance.image.url }}" height="60" class="mt-2 rounded">
+            {% endif %}
+        </div>
+        <div class="form-check mb-2">
+            {{ form.is_available }}
+            <label class="form-check-label">Available</label>
+        </div>
+        <div class="form-check mb-3">
+            {{ form.is_featured }}
+            <label class="form-check-label">Featured</label>
+        </div>
+
+        <button type="submit" class="btn" style="background:var(--accent); color:#fff;">Save Item</button>
+        <a href="{% url 'dashboard_menu' %}" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

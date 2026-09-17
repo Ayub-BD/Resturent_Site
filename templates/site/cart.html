@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Your Cart - {{ profile.name }}{% endblock %}
+
+{% block content %}
+<section class="page-header text-center">
+    <div class="container" data-aos="fade-up">
+        <span class="section-eyebrow">Checkout</span>
+        <h1 class="section-title">Your Cart</h1>
+    </div>
+</section>
+
+<section class="section pt-0">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="dash-card p-4" style="background:#fff; border-radius:1rem; box-shadow:0 6px 24px rgba(0,0,0,0.06);">
+                    {% if lines %}
+                    <table class="table align-middle">
+                        <thead>
+                            <tr><th>Item</th><th>Qty</th><th>Line Total</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            {% for line in lines %}
+                            <tr>
+                                <td>{{ line.item.name }}<br><span class="text-muted small">${{ line.item.price }} each</span></td>
+                                <td style="max-width:90px;">
+                                    <form method="post" action="{% url 'cart_update' line.item.id %}" class="d-flex gap-1">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity" value="{{ line.quantity }}" min="0" class="form-control form-control-sm">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">Update</button>
+                                    </form>
+                                </td>
+                                <td>${{ line.line_total }}</td>
+                                <td>
+                                    <form method="post" action="{% url 'cart_remove' line.item.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">&times;</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-between fw-bold fs-5 border-top pt-3">
+                        <span>Subtotal</span><span>${{ subtotal }}</span>
+                    </div>
+                    <a href="{% url 'order_now' %}" class="btn btn-outline-accent btn-sm mt-3">
+                        <i class="bi bi-arrow-left me-1"></i> Add more items
+                    </a>
+                    {% else %}
+                    <p class="text-muted mb-3">Your cart is empty.</p>
+                    <a href="{% url 'order_now' %}" class="btn btn-accent btn-sm">Browse the Menu</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if lines %}
+            <div class="col-lg-5">
+                <div class="p-4" style="background:#fff; border-radius:1rem; box-shadow:0 6px 24px rgba(0,0,0,0.06);">
+                    <h6 class="mb-3">Delivery Details</h6>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label small">Full Name</label>
+                            <input type="text" name="customer_name" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small">Phone Number</label>
+                            <input type="text" name="customer_phone" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small">Delivery Address</label>
+                            <textarea name="delivery_address" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small">Notes (optional)</label>
+                            <textarea name="special_instructions" class="form-control" rows="2" placeholder="e.g. No onions, ring the bell"></textarea>
+                        </div>
+                        <button type="submit" name="place_order" class="btn btn-accent w-100">
+                            Place Order -- ${{ subtotal }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

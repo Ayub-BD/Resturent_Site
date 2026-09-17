@@ -1,0 +1,44 @@
+{% extends "dashboard_base.html" %}
+{% block title %}{{ mode }} Offer{% endblock %}
+{% block page_title %}{{ mode }} Offer{% endblock %}
+
+{% block content %}
+<div class="dash-card" style="max-width: 640px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            {{ form.title }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            {{ form.description }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Image</label>
+            {{ form.image }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Discount %</label>
+            {{ form.discount_percent }}
+        </div>
+        <div class="row">
+            <div class="col-6 mb-3">
+                <label class="form-label">Start Date</label>
+                {{ form.start_date }}
+            </div>
+            <div class="col-6 mb-3">
+                <label class="form-label">End Date</label>
+                {{ form.end_date }}
+            </div>
+        </div>
+        <div class="form-check mb-3">
+            {{ form.is_active }}
+            <label class="form-check-label">Active</label>
+        </div>
+
+        <button type="submit" class="btn" style="background:var(--accent); color:#fff;">Save Offer</button>
+        <a href="{% url 'dashboard_offers' %}" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

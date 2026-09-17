@@ -1,0 +1,161 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Order {{ order.order_number }}{% endblock %}
+{% block page_title %}Order {{ order.order_number }} - {% if order.table %}{{ order.table.table_number }}{% else %}Delivery{% endif %}{% endblock %}
+
+{% block content %}
+
+{% if order.is_online %}
+<div class="dash-card mb-3">
+    <h6 class="mb-2"><i class="bi bi-bicycle me-1"></i> Delivery Order</h6>
+    <div class="row small">
+        <div class="col-md-4"><strong>Customer:</strong> {{ order.customer_name }}</div>
+        <div class="col-md-4"><strong>Phone:</strong> {{ order.customer_phone }}</div>
+        <div class="col-md-4"><strong>Address:</strong> {{ order.delivery_address }}</div>
+    </div>
+</div>
+{% endif %}
+
+<div class="d-flex align-items-center gap-2 mb-3">
+    <span class="badge badge-status
+        {% if order.status == 'pending' %}bg-secondary
+        {% elif order.status == 'confirmed' %}bg-info
+        {% elif order.status == 'preparing' %}bg-warning text-dark
+        {% elif order.status == 'ready' %}bg-primary
+        {% elif order.status == 'served' %}bg-success
+        {% elif order.status == 'completed' %}bg-dark
+        {% else %}bg-danger{% endif %}">
+        {{ order.get_status_display }}
+    </span>
+    {% if order.status != 'pending' %}
+        <a href="{% url 'print_receipt' order.order_number %}" target="_blank" class="btn btn-sm btn-outline-secondary">Print Receipt</a>
+        <a href="{% url 'print_kitchen_ticket' order.order_number %}" target="_blank" class="btn btn-sm btn-outline-secondary">Print Kitchen Ticket</a>
+    {% endif %}
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="dash-card">
+            <h6 class="mb-3">Order Items</h6>
+            <table class="table dash-table">
+                <thead><tr><th>Item</th><th>Qty</th><th>Notes</th><th>Line Total</th><th></th></tr></thead>
+                <tbody>
+                    {% for line in order.items.all %}
+                    <tr>
+                        <td>{{ line.menu_item.name }}</td>
+                        <td>{{ line.quantity }}</td>
+                        <td class="small text-muted">{{ line.notes }}</td>
+                        <td>${{ line.line_total }}</td>
+                        <td>
+                            {% if order.status == 'pending' %}
+                            <form method="post" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="item_id" value="{{ line.id }}">
+                                <button type="submit" name="remove_item" class="btn btn-sm btn-outline-danger">&times;</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-center text-muted">No items added yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if order.status == 'pending' %}
+            <hr>
+            <h6 class="mb-2">Add Item</h6>
+            <form method="post" class="row g-2 align-items-end">
+                {% csrf_token %}
+                <div class="col-6">
+                    <label class="form-label small">Menu item</label>
+                    <select name="menu_item_id" class="form-select" required>
+                        {% for item in menu_items %}
+                            <option value="{{ item.id }}">{{ item.name }} (${{ item.price }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-2">
+                    <label class="form-label small">Qty</label>
+                    <input type="number" name="quantity" class="form-control" value="1" min="1" required>
+                </div>
+                <div class="col-3">
+                    <label class="form-label small">Notes</label>
+                    <input type="text" name="notes" class="form-control" placeholder="e.g. No onion">
+                </div>
+                <div class="col-1">
+                    <button type="submit" name="add_item" class="btn w-100" style="background:var(--accent); color:#fff;">+</button>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="dash-card">
+            <h6 class="mb-3">Summary</h6>
+            <div class="d-flex justify-content-between mb-1"><span>Subtotal</span><span>${{ order.subtotal }}</span></div>
+            <div class="d-flex justify-content-between mb-1"><span>Discount</span><span>${{ order.discount }}</span></div>
+            <hr>
+            <div class="d-flex justify-content-between fw-bold fs-5 mb-3"><span>Total</span><span>${{ order.total }}</span></div>
+
+            {% if order.status == 'pending' %}
+                <!-- অফার সিলেক্ট করে ডিসকাউন্ট অ্যাপ্লাই করার ফর্ম -->
+                <form method="post" class="mb-3">
+                    {% csrf_token %}
+                    <label class="form-label small">Select Active Offer</label>
+                    <div class="input-group">
+                        <select name="discount" class="form-select" required>
+                            <option value="0">-- No Discount / Select Offer --</option>
+                            {% for offer in active_offers %}
+                               <option value="{{ offer.id }}">{{ offer.title }} ({{ offer.get_discount_value }}%)</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" name="set_discount" class="btn btn-outline-secondary">Apply</button>
+                    </div>
+                </form>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <label class="form-label small">Payment Method</label>
+                    <select name="payment_method" class="form-select mb-2" required>
+                        <option value="cash">Cash</option>
+                        <option value="card">Card</option>
+                        <option value="mobile_banking">Mobile Banking</option>
+                    </select>
+                    <button type="submit" name="confirm_order" class="btn w-100" style="background:var(--accent); color:#fff;"
+                        {% if not order.items.all %}disabled{% endif %}>
+                        Confirm Order
+                    </button>
+                </form>
+
+            {% elif next_status %}
+                <form method="post" class="mb-2">
+                    {% csrf_token %}
+                    <button type="submit" name="advance_status" class="btn w-100" style="background:var(--accent); color:#fff;">
+                        {{ next_status.1 }}
+                    </button>
+                </form>
+            {% endif %}
+
+            {% if order.status != 'completed' and order.status != 'cancelled' %}
+                <form method="post" onsubmit="return confirm('Cancel this order?');">
+                    {% csrf_token %}
+                    <button type="submit" name="cancel_order" class="btn btn-sm btn-outline-danger w-100 mt-2">Cancel Order</button>
+                </form>
+            {% endif %}
+        </div>
+
+        <div class="dash-card">
+            <h6 class="mb-3">Status History</h6>
+            <ul class="list-unstyled small mb-0">
+                {% for entry in order.status_history.all %}
+                    <li class="mb-1">
+                        <span class="text-muted">{{ entry.timestamp|date:"H:i" }}</span> -
+                        {{ entry.get_status_display }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

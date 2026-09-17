@@ -1,0 +1,25 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Create Order{% endblock %}
+{% block page_title %}Create Order - Select a Table{% endblock %}
+
+{% block content %}
+<div class="dash-card">
+    <div class="row g-3">
+        {% for table in tables %}
+            <div class="col-6 col-md-3">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="table_id" value="{{ table.id }}">
+                    <button type="submit" class="pos-table-btn w-100 border-0 bg-transparent" style="cursor:pointer;">
+                        <i class="bi bi-table fs-3"></i>
+                        <div class="fw-bold mt-1">{{ table.table_number }}</div>
+                        <div class="small text-muted">Seats {{ table.capacity }}</div>
+                    </button>
+                </form>
+            </div>
+        {% empty %}
+            <p class="text-muted">No available tables right now -- check Table Management.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,498 @@
+/* ==========================================================================
+   VARIABLES
+   ========================================================================== */
+:root {
+    --accent: #c0392b;
+    --dark: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Poppins', sans-serif;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--dark);
+    overflow-x: hidden;
+}
+
+h1, h2, h3, .font-heading {
+    font-family: var(--font-heading);
+}
+
+.section-eyebrow {
+    display: inline-block;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.section-title {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.section {
+    padding: 5rem 0;
+}
+
+.section--muted {
+    background-color: #faf8f6;
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+.btn-accent {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    font-weight: 500;
+    padding: 0.7rem 1.8rem;
+    border-radius: 50px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-accent:hover {
+    background-color: var(--accent);
+    filter: brightness(0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    color: #fff;
+}
+
+.btn-outline-accent {
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    font-weight: 500;
+    padding: 0.65rem 1.8rem;
+    border-radius: 50px;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+.btn-outline-accent:hover {
+    background-color: var(--accent);
+    color: #fff;
+}
+
+/* ==========================================================================
+   NAVBAR
+   ========================================================================== */
+.site-navbar {
+    background-color: rgba(255,255,255,0.97);
+    backdrop-filter: blur(6px);
+    padding: 0.9rem 0;
+    transition: box-shadow 0.3s ease, padding 0.3s ease;
+}
+.site-navbar.scrolled {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 0.5rem 0;
+}
+.brand-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+.site-navbar .nav-link {
+    font-weight: 500;
+    color: var(--dark);
+    position: relative;
+    margin: 0 0.4rem;
+}
+.site-navbar .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -2px;
+    width: 0; height: 2px;
+    background: var(--accent);
+    transition: width 0.25s ease;
+}
+.site-navbar .nav-link:hover::after {
+    width: 100%;
+}
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+.hero {
+    min-height: 90vh;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    color: #fff;
+}
+.hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, rgba(0,0,0,0.65), rgba(0,0,0,0.35));
+}
+.hero__title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.hero__tagline {
+    font-size: 1.25rem;
+    color: var(--accent);
+    font-weight: 500;
+}
+.hero__desc {
+    max-width: 560px;
+    color: rgba(255,255,255,0.85);
+}
+
+/* ==========================================================================
+   ABOUT / COUNTERS
+   ========================================================================== */
+.about-section__image {
+    border-radius: 1.5rem;
+}
+.counters .counter {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+}
+
+/* ==========================================================================
+   MENU FILTER BUTTONS
+   ========================================================================== */
+.menu-filter-btn.active {
+    background-color: var(--accent);
+    color: #fff;
+}
+
+/* ==========================================================================
+   MENU CARDS
+   ========================================================================== */
+.menu-card {
+    background: #fff;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    height: 100%;
+}
+.menu-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(0,0,0,0.12);
+}
+.menu-card__image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+.menu-card__image img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.menu-card:hover .menu-card__image img {
+    transform: scale(1.08);
+}
+.menu-card__badge {
+    position: absolute;
+    top: 12px; left: 12px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 50px;
+}
+.menu-card__badge--muted {
+    background: #6b6b6b;
+    left: auto; right: 12px;
+}
+.menu-card__body {
+    padding: 1.25rem;
+}
+.menu-card__name {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+.menu-card__price .current {
+    font-weight: 700;
+    color: var(--accent);
+}
+.menu-card__price .old {
+    text-decoration: line-through;
+    color: #aaa;
+    font-size: 0.85rem;
+    margin-left: 4px;
+}
+.menu-card__desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+.menu-card__category {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #aaa;
+}
+
+/* ==========================================================================
+   CHEF CARDS
+   ========================================================================== */
+.chef-card {
+    background: #fff;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    text-align: center;
+    height: 100%;
+}
+.chef-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(0,0,0,0.12);
+}
+.chef-card__image {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+}
+.chef-card__image img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.chef-card:hover .chef-card__image img {
+    transform: scale(1.06);
+}
+.chef-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.55), transparent 45%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.chef-card:hover .chef-card__overlay {
+    opacity: 1;
+}
+.chef-card__socials {
+    position: absolute;
+    bottom: 12px; left: 0; right: 0;
+    display: flex; justify-content: center; gap: 10px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+.chef-card:hover .chef-card__socials {
+    opacity: 1;
+    transform: translateY(0);
+}
+.chef-card__socials a {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    background: #fff; color: var(--dark);
+    border-radius: 50%;
+    font-size: 0.85rem;
+}
+.chef-card__body {
+    padding: 1.25rem 1rem;
+}
+.chef-card__name a {
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 600;
+}
+.chef-card__designation {
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.15rem;
+}
+.chef-card__specialty {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+.chef-card__experience {
+    display: inline-block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #aaa;
+}
+
+/* Chef profile page */
+.chef-profile__image { box-shadow: 0 16px 40px rgba(0,0,0,0.15); }
+.chef-profile__designation { color: var(--accent); font-weight: 600; }
+.chef-profile__specialty { color: var(--text-muted); }
+.signature-dishes { padding-left: 1.2rem; }
+.signature-dishes li { margin-bottom: 0.3rem; }
+
+/* ==========================================================================
+   OFFERS
+   ========================================================================== */
+.offer-card {
+    position: relative;
+    background: #fff;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+}
+.offer-card img {
+    width: 100%; height: 180px; object-fit: cover;
+}
+.offer-card__badge {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 50px;
+}
+.offer-card__body { padding: 1.25rem; }
+
+/* ==========================================================================
+   REVIEWS
+   ========================================================================== */
+.review-card {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+    max-width: 600px;
+    margin: 0 auto;
+}
+.review-card__stars { color: #f1b400; margin-bottom: 1rem; }
+.review-card__comment { font-style: italic; color: var(--text-muted); margin-bottom: 1.25rem; }
+.review-card__author { justify-content: center; }
+.review-card__avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.review-card__avatar--placeholder {
+    display: flex; align-items: center; justify-content: center;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+}
+.review-card__name { font-weight: 600; }
+
+/* ==========================================================================
+   RESERVATION CTA
+   ========================================================================== */
+.reservation-cta {
+    background: linear-gradient(120deg, var(--dark), #3a2a28);
+}
+
+/* ==========================================================================
+   TIMELINE (Our Story)
+   ========================================================================== */
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-left: 2rem;
+    border-left: 2px solid #eee;
+}
+.timeline__item {
+    position: relative;
+    padding: 0 0 2.5rem 1.5rem;
+}
+.timeline__dot {
+    position: absolute;
+    left: -2.45rem;
+    top: 0.2rem;
+    width: 14px; height: 14px;
+    background: var(--accent);
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px var(--accent);
+}
+.timeline__year {
+    display: inline-block;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+}
+
+/* ==========================================================================
+   CONTACT
+   ========================================================================== */
+.contact-info li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+}
+.contact-info li i {
+    color: var(--accent);
+    font-size: 1.1rem;
+    margin-top: 2px;
+}
+.contact-form .form-control,
+.contact-form input,
+.contact-form textarea {
+    border-radius: 0.6rem;
+    border: 1px solid #ddd;
+    padding: 0.7rem 1rem;
+    width: 100%;
+}
+.contact-form label {
+    font-weight: 500;
+    font-size: 0.85rem;
+    margin-bottom: 0.35rem;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.site-footer {
+    background: var(--dark);
+    color: #ccc;
+    padding: 4rem 0 1.5rem;
+}
+.footer-brand {
+    font-family: var(--font-heading);
+    color: #fff;
+}
+.footer-heading {
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+.footer-links li { margin-bottom: 0.5rem; }
+.footer-links a {
+    color: #ccc;
+    text-decoration: none;
+}
+.footer-links a:hover { color: var(--accent); }
+.footer-socials a {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+    color: #fff;
+}
+.footer-divider { border-color: rgba(255,255,255,0.1); margin: 2rem 0 1.5rem; }
+
+/* ==========================================================================
+   PAGE HEADER (Our Story / Contact)
+   ========================================================================== */
+.page-header {
+    padding: 8rem 0 3rem;
+    background: #faf8f6;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 991px) {
+    .site-navbar .navbar-nav { padding: 1rem 0; }
+    .hero { min-height: 75vh; text-align: center; }
+}
