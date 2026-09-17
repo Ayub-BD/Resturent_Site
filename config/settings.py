@@ -7,6 +7,7 @@ changing the DATABASES dict below -- nothing else in the project needs
 to change.
 """
 
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,13 +15,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ------------------------------------------------------------------
 # SECURITY
 # ------------------------------------------------------------------
-# NOTE: this key is fine for local development only. Before deploying,
-# move this to an environment variable (see python-decouple in
-# requirements.txt) and never commit a real production key.
 SECRET_KEY = "django-insecure-dev-key-change-before-deployment"
 
 DEBUG = True
-ALLOWED_HOSTS = ["*"]  # tighten this before deployment
+ALLOWED_HOSTS = ["*"]  # Vercel সহ সব হোস্ট এলাউ করার জন্য '*' রাখা হয়েছে
 
 # ------------------------------------------------------------------
 # APPLICATIONS
@@ -47,6 +45,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Vercel-এ CSS/JS পাওয়ার জন্য WhiteNoise যোগ করা হলো
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -59,7 +58,7 @@ ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "BACKEND": "django.template.backends.DjangoTemplates",
         "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -68,8 +67,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                # Injects `profile` (RestaurantProfile) into every template's
-                # context automatically -- base.html/navbar/footer rely on it.
                 "restaurant.context_processors.restaurant_profile",
             ],
         },
@@ -87,19 +84,6 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
-# To switch to PostgreSQL for production, replace the block above with:
-#
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "restaurant_db",
-#         "USER": "restaurant_user",
-#         "PASSWORD": "change-me",
-#         "HOST": "localhost",
-#         "PORT": "5432",
-#     }
-# }
 
 # ------------------------------------------------------------------
 # PASSWORD VALIDATION
@@ -124,10 +108,13 @@ USE_TZ = True
 # ------------------------------------------------------------------
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"  # used by `collectstatic` in production
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Vercel-এ Static files কমপ্রেসড করার জন্য WhiteNoise Storage
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"  # manager-uploaded chef/menu/offer/review images land here
+MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -141,8 +128,6 @@ LOGOUT_REDIRECT_URL = "landing"
 # ------------------------------------------------------------------
 # MESSAGES
 # ------------------------------------------------------------------
-# Django's default "error" tag doesn't match Bootstrap's "alert-danger" class
-# used by the dashboard templates, so map it here.
 from django.contrib.messages import constants as message_constants  # noqa: E402
 
 MESSAGE_TAGS = {
