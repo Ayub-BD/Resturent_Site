@@ -7,7 +7,6 @@ changing the DATABASES dict below -- nothing else in the project needs
 to change.
 """
 
-import os
 from pathlib import Path
 import dj_database_url
 import os
@@ -17,15 +16,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ------------------------------------------------------------------
 # SECURITY
 # ------------------------------------------------------------------
-SECRET_KEY = "django-insecure-dev-key-change-before-deployment"
+# NOTE: this key is fine for local development only. Before deploying,
+# move this to an environment variable (see python-decouple in
+# requirements.txt) and never commit a real production key.
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-key-change-before-deployment")
 
-<<<<<<< HEAD
-DEBUG = True
-ALLOWED_HOSTS = ["*"]  # Vercel সহ সব হোস্ট এলাউ করার জন্য '*' রাখা হয়েছে
-=======
 DEBUG = False
 ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']  # tighten this before deployment
->>>>>>> 1d55985 (Configure project for Render deployment with PostgreSQL and Whitenoise)
 
 # ------------------------------------------------------------------
 # APPLICATIONS
@@ -52,7 +49,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # Vercel-এ CSS/JS পাওয়ার জন্য WhiteNoise যোগ করা হলো
     "django.contrib.sessions.middleware.SessionMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.middleware.common.CommonMiddleware",
@@ -66,7 +62,7 @@ ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.DjangoTemplates",
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -93,6 +89,19 @@ DATABASES = {
     )
 }
 
+# To switch to PostgreSQL for production, replace the block above with:
+#
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "restaurant_db",
+#         "USER": "restaurant_user",
+#         "PASSWORD": "change-me",
+#         "HOST": "localhost",
+#         "PORT": "5432",
+#     }
+# }
+
 # ------------------------------------------------------------------
 # PASSWORD VALIDATION
 # ------------------------------------------------------------------
@@ -114,21 +123,12 @@ USE_TZ = True
 # ------------------------------------------------------------------
 # STATIC & MEDIA FILES
 # ------------------------------------------------------------------
-<<<<<<< HEAD
-STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# Vercel-এ Static files কমপ্রেসড করার জন্য WhiteNoise Storage
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-=======
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # used by `collectstatic` in production
->>>>>>> 1d55985 (Configure project for Render deployment with PostgreSQL and Whitenoise)
 
 MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = BASE_DIR / "media"  # manager-uploaded chef/menu/offer/review images land here
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -142,6 +142,8 @@ LOGOUT_REDIRECT_URL = "landing"
 # ------------------------------------------------------------------
 # MESSAGES
 # ------------------------------------------------------------------
+# Django's default "error" tag doesn't match Bootstrap's "alert-danger" class
+# used by the dashboard templates, so map it here.
 from django.contrib.messages import constants as message_constants  # noqa: E402
 
 MESSAGE_TAGS = {
