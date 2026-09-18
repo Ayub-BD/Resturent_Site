@@ -1,10 +1,5 @@
 """
 Django settings for the Restaurant Website + Management System.
-
-Dev setup uses SQLite (per project spec: 'SQLite can be used during
-initial development'). Swapping to PostgreSQL later is just a matter of
-changing the DATABASES dict below -- nothing else in the project needs
-to change.
 """
 
 from pathlib import Path
@@ -16,13 +11,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ------------------------------------------------------------------
 # SECURITY
 # ------------------------------------------------------------------
-# NOTE: this key is fine for local development only. Before deploying,
-# move this to an environment variable (see python-decouple in
-# requirements.txt) and never commit a real production key.
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-key-change-before-deployment")
 
 DEBUG = False
-ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']  # tighten this before deployment
+ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
 
 # ------------------------------------------------------------------
 # APPLICATIONS
@@ -49,8 +41,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Whitenoise placed right after SecurityMiddleware
     "django.contrib.sessions.middleware.SessionMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -89,19 +81,6 @@ DATABASES = {
     )
 }
 
-# To switch to PostgreSQL for production, replace the block above with:
-#
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "restaurant_db",
-#         "USER": "restaurant_user",
-#         "PASSWORD": "change-me",
-#         "HOST": "localhost",
-#         "PORT": "5432",
-#     }
-# }
-
 # ------------------------------------------------------------------
 # PASSWORD VALIDATION
 # ------------------------------------------------------------------
@@ -125,10 +104,10 @@ USE_TZ = True
 # ------------------------------------------------------------------
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # used by `collectstatic` in production
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"  # manager-uploaded chef/menu/offer/review images land here
+MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -142,9 +121,7 @@ LOGOUT_REDIRECT_URL = "landing"
 # ------------------------------------------------------------------
 # MESSAGES
 # ------------------------------------------------------------------
-# Django's default "error" tag doesn't match Bootstrap's "alert-danger" class
-# used by the dashboard templates, so map it here.
-from django.contrib.messages import constants as message_constants  # noqa: E402
+from django.contrib.messages import constants as message_constants
 
 MESSAGE_TAGS = {
     message_constants.ERROR: "danger",
